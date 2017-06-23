@@ -8,6 +8,6 @@ This web solution use Ansible playbook for automation installation Bacula Agent 
 
 Detail information in README file.
 
-Instalation
+Installation
 
-cd /opt  &&  git clone https://github.com/MykolaPerehinets/bads.git  &&  cd /opt/bads  &&  ./install.sh
+cd /opt   &&   git clone https://github.com/MykolaPerehinets/bads.git   &&   cd /opt/bads   &&   ./install.sh
