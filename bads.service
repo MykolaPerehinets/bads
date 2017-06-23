@@ -1,0 +1,38 @@
+# Bacula Agent Deploy Server service script
+
+[Unit]
+Description=The Bacula Agent Deploy Server front-end(web)
+Documentation=https://github.com/MykolaPerehinets/bads
+After=network.target network-online.target local-fs.target remote-fs.target time-sync.target
+Wants=network.target network-online.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+RootDirectory=/opt/bads/
+#WorkingDirectory=/tmp/
+WorkingDirectory=/opt/bads/
+PIDFile=/var/run/bads.pid
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+#TaskMax=infinity
+Restart=on-failure
+RestartSec=15s
+StartLimitInterval=60s
+StartLimitBurst=5
+Environment=PATH=/opt/bads/:$PATH
+#ExecStart=/usr/bin/bash -c '/opt/bads/bads'
+#ExecStart=/usr/bin/sh '/opt/bads/bads.sh'
+ExecStart=/opt/bads/bads.sh
+ExecReload=/bin/kill -HUP $MAINPID
+RemainAfterExit=yes
+PrivateDevices=yes
+ProtectHome=true
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+Alias=bads.service

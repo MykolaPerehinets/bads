@@ -1,0 +1,13 @@
+# Bacula Agent Deploy Server logrotate script
+
+/var/log/bads/*
+{
+    rotate 6
+    daily
+    missingok
+    dateext
+    copytruncate
+    notifempty
+    compress
+    su root root
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bacula Agent Deploy Server</title>
+<style>
+h1 {
+ color:#F0FFFF;
+ }
+h2 {
+ color:#F0FFFF;
+ }
+h3 {
+ color:#F0FFFF;
+ }
+a {
+ color:#E0FFFF;
+ }
+p {
+ color:#F0FFFF;
+ }
+content_left {
+ text-align:left;
+ }
+body {
+ margin: 0;
+ heigh: 100%;
+ background: url(../images/lemur-wallpaper.jpg) no-repeat;
+ -moz-background-size: cover;
+ -webkit-background-size: cover;
+ -o-background-size: cover;
+ background-size: cover;
+ }
+</style>
+<script type="text/javascript">
+  /* <![CDATA[ */
+   function externalLinks() {
+    links = document.getElementsByTagName("a");
+    for (i=0; i<links.length; i++) {
+      link = links[i];
+      if (link.getAttribute("href") && link.getAttribute("rel") == "external")
+      link.target = "_blank";
+    }
+   }
+   window.onload = externalLinks;
+  /* ]]> */ 
+</script>
+</head>
+<body id="content_left">
+<h1>Welcome to iBacula&reg; &mdash; All-in-one Corporate Backup System</h1>
+<h2>Warning! This dashboard deploy Bacula Agent to your server!</h2>
+<h3><a href="/logout">Disconnect immediately</a> if don`t need deploy Bacula Agent or please proceed follow the steps:</h3>
+<br>
+<!-- Please add this ansible SSH key -->
+<p><b> Step 1: </b> Please insert ansible key below into <b>/root/.ssh/autorized_keys</b> on your server</p>
+<p><b>"SSH-RSA AAAA ............... ........... "</b></p>
+<!-- Please add this documentation page -->
+<p><b> Step 2: </b> Please verify system. This script works on CentOS and Ubuntu. Information about deploy process: <b><a href="https://localhost.localdomain" rel="external"> (Installation Documentation)</a></b></p>
+<br>
+<p><b> Step 3: </b> Please fill in Fully Qualified Domain Name(FQDN), IP ADDRESS of your server and start the deploy procedure</p>
+<form method="post">
+<input type="text" name="hostname" placeholder="FQDN">
+<input type="text" name="ipaddress" placeholder="IP ADDRESS">
+<input type="submit">
+</form>
+<br>
+<p><b> Step 4: </b> Ok.. Don't Worry... Please waiting... Verify output logs from system, after deploy Bacula Agent...</p>
+<p style="position: absolute; left: 0px; bottom: 0px;"> Copyright &copy; 2016-2017. Powered by <a href="https://github.com/MykolaPerehinets/bads" rel="external"> Mykola Perehinets.</a> All rights reserved.</p>
+</body>
+</html>
