@@ -8,9 +8,5 @@ This front-end(web) solution use ansible playbook for installation bacula agent 
 
 Instalation
 
-cd /opt
 git clone https://github.com/MykolaPerehinets/bads.git
-cd /opt/bads
-verify configuration
-./install.sh
 
