@@ -6,23 +6,23 @@ NOTE: BADS is an Open-source project. I am very grateful to @opast (https://gith
 
 Installation
 
-# Deploy Bacula Agent Deploy Server
+# Deploy Bacula Agent Deploy Server to localhost
 cd /opt
 Clone repo to folder git clone https://github.com/MykolaPerehinets/bads.git
 cd /opt/bads
 Verify configuration in /opt/bads/templates/todo.html
 Run ./install.sh
 
-# Update Bacula Agent Deploy Server
+# Update Bacula Agent Deploy Server to localhost
 cd /opt/bads
 Pull repo to folder git pull https://github.com/MykolaPerehinets/bads.git
 Verify configuration in /opt/bads/templates/todo.html
 Run ./install.sh
 
-# Rsync Bacula Agent Deploy Server
+# Deploy Bacula Agent Deploy Server to remotehost (use rsync)
 rsync -uvroghtpaz --rsync-path="ionice -c 3 nice -n 12 rsync" --progress --stats "/home/mperehin/LOG_FOR WORK/bads" root@ibacula.localhost.localdomain:/opt/
 
-Information and usage
+Information and usage BADS web server
 https://localhost.localdomain:8443
 default username: admin
 default password: admin
