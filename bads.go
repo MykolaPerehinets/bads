@@ -139,7 +139,7 @@ func main() {
 	log.Printf("Starting Bacula Agent Deploy Server front-end(web) service...")	
 	log.Printf("BADS about to listen on 8443. Go to https://127.0.0.1:8443 for verifing...")
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("images"))))
-	err := http.ListenAndServeTLS(":8443", "server.crt", "server.pem", context.ClearHandler(http.DefaultServeMux))
+	err := http.ListenAndServeTLS(":8443", "server.crt", "server.key", context.ClearHandler(http.DefaultServeMux))
 	log.Fatal(err)
 }
 
