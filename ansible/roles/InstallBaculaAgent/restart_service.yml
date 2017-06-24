@@ -1,0 +1,70 @@
+---
+- hosts: InstallBaculaAgent
+  vars_files:
+    - vars.yml
+    - basic.yml
+  connection: ssh
+#  strategy: free
+#  strategy: debug
+  gather_facts: no
+#  gather_facts: yes
+  become: yes
+  become_method: sudo
+  become_user: root
+  remote_user: root
+
+  tasks:
+    - name: Test connection
+      ping:
+
+#    - debug: var=ansible_distribution
+
+    - name: Pause play to interact with the servers
+      pause: prompt="This playbook paused... Hit <ENTER> to continue or <CTRL-C A> to abort"
+
+#    - name: Replace servername in the Bacula Agent config file
+#      replace: path=/etc/bacula/bacula-fd.conf regexp='bacula' replace='ibacula' backup=yes
+
+    - name: Replace hostname in the Bacula Agent config file
+      replace: path=/etc/bacula/bacula-fd.conf regexp='hostname' replace='{{ hostname_short }}' backup=yes
+
+    - name: Replace hostname in the Bacula Server config file
+      replace: path="{{ bacula_conf_folder_disable }}bacula-dir_temp.conf" regexp='hostname' replace='{{ hostname_short }}' backup=yes
+
+#    - name: Replace hostname in the Bacula Agent config file
+#      lineinfile:
+#         path: /etc/bacula/bacula-fd.conf
+##         state: present
+#         regexp: '^(.*)hostname(.*)$'
+#         line: '\1{{ hostname_short }}\2'
+#         backup: yes
+##         backrefs: yes
+#         register: bacula-fd
+
+#    - debug: msg={{ bacula-fd.stdout }}
+
+#    - debug: var=bacula-fd
+
+    - name: Restart the Bacula Agent(bacula-fd.service)
+      command: echo "This task will restart the Bacula Agent(bacula-fd.service)" || /bin/true
+      notify: "Restart Bacula Agent(bacula-fd.service)"
+
+    - name: Restart NTP Agent(chronyd.service)
+      command: echo "This task will restart the NTP Agent(chronyd.service)" || /bin/true
+      notify: "Restart NTP Agent(chronyd.service)"
+
+    - name: Restart xinetd.service(xinetd.service)
+      command: echo "This task will restart the xinetd.service(xinetd.service)" || /bin/true
+      notify: "Restart xnetd(xinetd.service)"
+
+#    - name: Restart a server
+#      shell: echo "Rebooting $hostname"
+#      args:
+#          executable: /bin/bash
+#      notify:
+#        - Restart server
+#        - Wait for server to restart
+
+  handlers:
+    - include: handlers.yml
+

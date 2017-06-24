@@ -1,0 +1,77 @@
+---
+- hosts: InstallBaculaAgent
+  vars_files:
+    - vars.yml
+    - basic.yml
+  connection: ssh
+#  strategy: free
+  strategy: debug
+#  gather_facts: no
+  gather_facts: yes
+  become: yes
+  become_method: sudo
+  become_user: root
+  remote_user: root
+
+  tasks:
+    - name: Test connection
+      ping:
+
+    - debug: var=ansible_distribution
+
+#    - name: Pause play to interact with the servers
+#      pause: prompt="This playbook paused... Hit <ENTER> to continue or <CTRL-C A> to abort"
+
+#    - name: Install new configuration files for Corporate Backup System Bacula(server side)
+#      copy: src="{{ item }}" dest="{{ bacula_conf_folder_disable }}" backup=yes owner=root group=root mode=0644
+#      with_fileglob:
+#       - ../files/conf.d/*
+
+#    - name: Replace hostname in the Bacula Server config file
+#      replace: path="{{ bacula_conf_folder_disable }}bacula-dir_temp.conf" regexp='hostname' replace='{{ hostname_short }}' backup=yes
+
+    - name: Copy Bacula server config file to Ansible node
+      synchronize:
+         mode: pull
+         src: "{{ bacula_conf_folder_disable }}bacula-dir_temp.conf"
+         dest: "{{ bacula_conf_folder_disable }}{{ hostname_short }}.conf"
+         rsync_path: "ionice -c 3 nice -n 12 rsync"
+         rsync_opts:
+            - "-uvroghtpaz"
+            - "--progress"
+            - "--stats"
+         archive: yes
+         compress: yes
+         delete: no
+         verify_host: yes
+
+    - name: Deploy Bacula server config file to Corporate Backup System Bacula server(server side)
+      local_action: >
+        command
+        rsync
+        -uvroghtpaz --progress --stats
+        --rsh 'ssh -i /root/.ssh/id_rsa.pub -o stricthostkeychecking=no'
+        --rsync-path 'ionice -c 3 nice -n 12 rsync'
+        --out-format='<<CHANGED>>%i %n%L'
+        {{ bacula_conf_folder_disable }}{{ hostname_short }}.conf
+        root@{{ bacula_node2 }}:{{ bacula_conf_folder_disable }}{{ hostname_short }}.conf
+#        root@{{ bacula_node2 }}:{{ bacula_conf_folder_enable }}{{ hostname_short }}.conf
+
+    - name: Update information about all files and configurations in /etc folder
+      shell: cd /etc && etckeeper commit "Update information about all files and configurations in /etc folder. State at {{ date }}" || /bin/true
+      args:
+          executable: /bin/bash
+      register: etckeeper
+
+#    - debug: msg={{ etckeeper.stdout }}
+
+#    - debug: var=etckeeper
+
+#    - name: Audit Linux systems/services for correct backup process(Bacula Bare-Metal)
+#      command: /etc/bacula/scripts/audit_linux_system.sh || /bin/true
+#      args:
+#          executable: /bin/bash
+
+  handlers:
+    - include: handlers.yml
+

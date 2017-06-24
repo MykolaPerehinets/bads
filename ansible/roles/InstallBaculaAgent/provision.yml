@@ -1,0 +1,168 @@
+---
+- hosts: InstallBaculaAgent
+  vars_files:
+    - vars.yml
+    - basic.yml
+  connection: ssh
+#  strategy: free
+#  strategy: debug
+#  gather_facts: no
+  gather_facts: yes
+  become: yes
+  become_method: sudo
+  become_user: root
+  remote_user: root
+
+  tasks:
+    - name: Test connection
+      ping:
+
+#    - debug: var=ansible_distribution
+
+    - name: Pause play to interact with the servers
+      pause: prompt="This playbook paused... Hit <ENTER> to continue or <CTRL-C A> to abort"
+
+#    - name: Disable selinux
+#      command: /sbin/setenforce 0
+
+#    - name: Retrieve new lists of system packages for Corporate Backup System Bacula
+#      shell: cd / && yum clean all && yum update || /bin/true
+#      args:
+#          executable: /bin/bash
+
+    - name: Install required system packages for Corporate Backup System Bacula
+      yum: pkg="{{ item }}" state=installed update_cache=true
+      with_items: "{{ system_packages_CentOS }}"
+      when: ansible_os_family == "CentOS" and ansible_lsb.major_release|int >= 5
+
+#    - name: Install required system packages for Corporate Backup System Bacula
+#      apt: pkg="{{ item }}" state=installed update-cache=true
+#      with_items: "{{ system_packages_Ubuntu }}"
+#      when: ansible_os_family == "Ubuntu"
+
+    - name: Install base and additional Bacula configuration files
+      copy: src="{{ item }}" dest=/etc/bacula/ backup=yes owner=root group=root mode=0644
+      with_fileglob:
+       - ../files/bacula/*
+
+    - name: Install additional functional scripts for Bacula System
+      copy: src="{{ item }}" dest=/etc/bacula/scripts/ backup=yes owner=root group=root mode=0755
+      with_fileglob:
+       - ../files/scripts/*
+
+    - name: Install additional NTP configuration files
+      copy: src="{{ item }}" dest=/etc/ backup=yes owner=root group=root mode=0644
+      with_fileglob:
+       - ../files/chronyd/*
+
+#    - name: Install additional sysctl configuration files
+#      copy: src="{{ item }}" dest=/etc/sysctl.d/ backup=yes owner=root group=root mode=0644
+#      with_fileglob:
+#       - ../files/sysctl.d/*
+
+    - name: Install new configuration files for Corporate Backup System Bacula(server side)
+      copy: src="{{ item }}" dest="{{ bacula_conf_folder_disable }}" backup=yes owner=root group=root mode=0644
+      with_fileglob:
+       - ../files/conf.d/*
+
+    - name: Ensure bacula-fd.service is running (and enable it at boot)
+      service: name=bacula-fd state=started enabled=yes
+
+    - name: Ensure chronyd.service is running (and enable it at boot)
+      service: name=chronyd state=started enabled=yes
+
+#    - name: Ensure ntp.service is running (and enable it at boot)
+#      service: name=ntp state=started enabled=yes
+
+    - name: Ensure xinetd.service is running (and enable it at boot)
+      service: name=xinetd state=started enabled=yes
+
+    - name: Addditional requirements for initial etckeeper solution
+#      shell: cd /etc && etckeeper init && etckeeper commit "Initial import" && git config --global user.name "root" && git config --global user.email root@{{ hostname_short }}.{{ domain_name }} || /bin/true
+      shell: cd /etc && etckeeper init && etckeeper commit "Initial import" && git config --global user.name "root" && git config --global user.email root@{{ hostname }} || /bin/true
+#      shell: cd /etc && git config --global user.name "root" && git config --global user.email root@{{ hostname_short }}.{{ domain_name }} || /bin/true
+#      shell: cd /etc && git config --global user.name "root" && git config --global user.email root@{{ hostname }} || /bin/true
+      args:
+          executable: /bin/bash
+
+    - name: Start the NTP Agent(chronyd.service)
+      command: echo "This task will start the NTP Agent(chronyd.service)" || /bin/true
+      notify: "Start NTP Agent(chronyd.service)"
+
+#    - name: Replace servername in the Bacula Agent config file
+#      replace: path=/etc/bacula/bacula-fd.conf regexp='bacula' replace='ibacula' backup=yes
+
+    - name: Replace hostname in the Bacula Agent config file
+      replace: path=/etc/bacula/bacula-fd.conf regexp='hostname' replace='{{ hostname_short }}' backup=yes
+
+    - name: Replace hostname in the Bacula Server config file
+      replace: path="{{ bacula_conf_folder_disable }}bacula-dir_temp.conf" regexp='hostname' replace='{{ hostname_short }}' backup=yes
+
+    - name: Copy Bacula server config file to Ansible node
+      synchronize:
+         mode: pull
+         src: "{{ bacula_conf_folder_disable }}bacula-dir_temp.conf"
+         dest: "{{ bacula_conf_folder_disable }}{{ hostname_short }}.conf"
+         rsync_path: "ionice -c 3 nice -n 12 rsync"
+         rsync_opts:
+            - "-uvroghtpaz"
+            - "--progress"
+            - "--stats"
+         delete: no
+         verify_host: no
+
+    - name: Deploy Bacula server config file to Corporate Backup System Bacula server(server side)
+      local_action: >
+        command
+        rsync
+        --delay-updates -FF --compress --timeout=10 --delete-after
+        --archive --no-owner --no-group --update --progress --stats
+        --rsh 'ssh -i /root/.ssh/id_rsa.pub -o stricthostkeychecking=no'
+        --rsync-path 'ionice -c 3 nice -n 12 rsync'
+        --out-format='<<CHANGED>>%i %n%L'
+        {{ bacula_conf_folder_disable }}{{ hostname_short }}.conf
+        root@{{ bacula_node2 }}:{{ bacula_conf_folder_disable }}{{ hostname_short }}.conf
+#        root@{{ bacula_node2 }}:{{ bacula_conf_folder_enable }}{{ hostname_short }}.conf
+
+    - name: Update information about all files and configurations in /etc folder
+      shell: cd /etc && etckeeper commit "Update information about all files and configurations in /etc folder. State at {{ date }}" || /bin/true
+      args:
+          executable: /bin/bash
+      register: etckeeper
+
+#    - debug: msg={{ etckeeper.stdout }}
+
+#    - debug: var=etckeeper
+
+    - name: Start the Bacula Agent(bacula-fd.service)
+      command: echo "This task will start the Bacula Agent(bacula-fd.service)" || /bin/true
+      notify: "Start Bacula Agent(bacula-fd.service)"
+
+#    - name: Restart systemd-sysctl(systemd-sysctl.service)
+#      command: echo "This task will restart the systemd-sysctl(systemd-sysctl.service)" || /bin/true
+#      notify: "Restart systemd-sysctl(systemd-sysctl.service)"
+
+#    - name: Using the sysctl command
+#      shell: cd / && sysctl -p || /bin/true
+#      args:
+#          executable: /bin/bash
+
+    - name: Audit Linux systems/services for correct backup process(Bacula Bare-Metal)
+      shell: /etc/bacula/scripts/audit_linux_system.sh || /bin/true
+      args:
+          executable: /bin/bash
+
+#    - name: Enable selinux
+#      command: /sbin/setenforce 1
+
+#    - name: Restart a server
+#      shell: echo "Rebooting $hostname"
+#      args:
+#          executable: /bin/bash
+#      notify:
+#        - Restart server
+#        - Wait for server to restart
+
+  handlers:
+    - include: handlers.yml
+

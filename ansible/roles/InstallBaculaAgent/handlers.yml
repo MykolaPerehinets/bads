@@ -1,0 +1,59 @@
+---
+- name: Start Bacula Agent(bacula-fd.service)
+  service: name=bacula-fd state=started
+  remote_user: root
+  listen: "Start Bacula Agent(bacula-fd.service)"
+
+- name: Restart Bacula Agent(bacula-fd.service)
+  service: name=bacula-fd state=restarted
+  remote_user: root
+  listen: "Restart Bacula Agent(bacula-fd.service)"
+
+
+- name: Start NTP Agent(chronyd.service)
+  service: name=chronyd state=started
+  remote_user: root
+  listen: "Start NTP Agent(chronyd.service)"
+
+- name: Restart NTP Agent(chronyd.service)
+  service: name=chronyd state=restarted
+  remote_user: root
+  listen: "Restart NTP Agent(chronyd.service)"
+
+
+- name: Start NTP Agent(ntp.service)
+  service: name=ntp state=started
+  remote_user: root
+  listen: "Start NTP Agent(ntp.service)"
+
+- name: Restart NTP Agent(ntp.service)
+  service: name=ntp state=restarted
+  remote_user: root
+  listen: "Restart NTP Agent(ntp.service)"
+
+
+- name: Start xinetd.service(xinetd.service)
+  service: name=xinetd state=started
+  remote_user: root
+  listen: "Start xnetd(xinetd.service)"
+
+- name: Restart xinetd.service(xinetd.service)
+  service: name=xinetd state=restarted
+  remote_user: root
+  listen: "Restart xnetd(xinetd.service)"
+
+
+- name: Restart server
+  command: sleep 2 && shutdown -r now "Reboot triggered by Ansible"
+  async: 1
+  poll: 0
+  ignore_errors: true
+
+- name: Wait for server to restart
+  local_action:
+    module: wait_for
+       host={{ inventory_hostname }}
+       port=22
+       delay=1
+       timeout=300
+

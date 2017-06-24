@@ -1,0 +1,24 @@
+---
+- hosts: InstallBaculaAgent
+  vars_files:
+    - vars.yml
+    - basic.yml
+  connection: ssh
+#  strategy: free
+#  strategy: debug
+  gather_facts: no
+#  gather_facts: yes
+  become: yes
+  become_method: sudo
+  become_user: root
+  remote_user: root
+
+  tasks:
+    - name: Test connection
+      ping:
+
+    - debug: var=ansible_distribution
+
+  handlers:
+    - include: handlers.yml
+

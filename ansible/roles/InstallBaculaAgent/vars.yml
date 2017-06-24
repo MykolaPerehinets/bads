@@ -1,0 +1,87 @@
+#######################################################################################################################
+# Script modified date
+# Version=24062017
+#
+#######################################################################################################################
+#ansible_ssh_user: root
+#ansible_ssh_pass: ""
+#ansible_ssh_private_key_file: /root/.ssh/id_rsa.pub
+#ansible_sudo_pass: ""
+#ansible_distribution: CentOS Linux release 7.3.1611 (Core)
+hostname_short: "{{ inventory_hostname_short }}"
+hostname: "{{ inventory_hostname }}"
+domain_name: localhost.localdomain
+#domain_name: localhost.localdomain
+date: "{{ lookup('pipe', 'date +%Y-%m-%d_%H:%M') }}"
+ansible_node0: iansible1.localhost.localdomain
+bacula_node1: ibacula1.localhost.localdomain
+bacula_node2: ibacula2.localhost.localdomain
+bacula_conf_folder_enable: /etc/bacula/conf.d/
+bacula_conf_folder_disable: /etc/bacula/conf.d/DISABLE/
+system_packages_CentOS:
+  - mc
+  - wget
+  - rsync
+  - bacula-client
+  - vim
+  - parted
+  - pciutils
+  - yum-plugin-security
+  - yum-plugin-verify
+  - yum-plugin-changelog
+  - lshw
+  - usbutils
+  - lsscsi
+  - pigz
+  - mlocate
+  - time
+  - glances
+  - tuned
+  - redhat-lsb-core
+  - etckeeper
+  - firewalld
+  - mailx
+  - policycoreutils-python
+  - policycoreutils-newrole
+  - policycoreutils-restorecond
+  - setools-console
+  - lsof
+  - iotop
+  - htop
+  - tree
+  - mutt
+  - chrony
+  - bash-completion
+  - mlocate
+  - pbzip2
+system_packages_Ubuntu:
+  - gnupg
+  - mc
+  - wget
+  - xinetd
+  - rcconf
+  - open-vm-tools
+  - check-mk-agent
+  - rsync
+  - bacula-client
+  - vim
+  - parted
+  - pciutils
+  - lshw
+  - usbutils
+  - lsscsi
+  - pigz
+  - mlocate
+  - time
+  - glances
+  - etckeeper
+  - lsof
+  - iotop
+  - htop
+  - tree
+  - mutt
+  - bash-completion
+  - mlocate
+  - pbzip2
+  - bsd-mailx
+
