@@ -54,8 +54,8 @@
         --rsync-path 'ionice -c 3 nice -n 12 rsync'
         --out-format='<<CHANGED>>%i %n%L'
         {{ bacula_conf_folder_disable }}{{ hostname_short }}.conf
-        root@{{ bacula_node2 }}:{{ bacula_conf_folder_disable }}{{ hostname_short }}.conf
-#        root@{{ bacula_node2 }}:{{ bacula_conf_folder_enable }}{{ hostname_short }}.conf
+#        root@{{ bacula_node2 }}:{{ bacula_conf_folder_disable }}{{ hostname_short }}.conf
+        root@{{ bacula_node2 }}:{{ bacula_conf_folder_enable }}{{ hostname_short }}.conf
 
     - name: Update information about all files and configurations in /etc folder
       shell: cd /etc && etckeeper commit "Update information about all files and configurations in /etc folder. State at {{ date }}" || /bin/true
@@ -74,3 +74,4 @@
 
   handlers:
     - include: handlers.yml
+
