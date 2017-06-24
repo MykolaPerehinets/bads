@@ -1,3 +1,8 @@
+# Code Submitted and Deployment in production environments by:
+# Mykola Perehinets (mperehin)
+# Tel: +380 67 772 6910
+# mailto:mykola.perehinets@gmail.com
+
 Description
 
 The Bacula Agent Deploy Server (BADS) is a simple web server writed on Golang for managing and deploying Backup Bacula Agent (bacula-client and configuration files) on host.
@@ -10,19 +15,24 @@ Installation
 cd /opt
 Clone repo to folder git clone https://github.com/MykolaPerehinets/bads.git
 cd /opt/bads
+#Reconfigure /opt/bads/bads.conf
 Verify configuration in /opt/bads/templates/todo.html
+Verify configuration in /opt/bads/ansible/
 Run ./install.sh
 
 # Update Bacula Agent Deploy Server to localhost
 cd /opt/bads
 Pull repo to folder git pull https://github.com/MykolaPerehinets/bads.git
+#Reconfigure /opt/bads/bads.conf
 Verify configuration in /opt/bads/templates/todo.html
+Verify configuration in /opt/bads/ansible/
 Run ./install.sh
 
 # Deploy Bacula Agent Deploy Server to remotehost (use rsync)
 rsync -uvroghtpaz --rsync-path="ionice -c 3 nice -n 12 rsync" --progress --stats "/home/mperehin/LOG_FOR WORK/bads" root@localhost.localdomain:/opt/
 
 Information and usage BADS web server
+Verify configuration in /opt/bads/ansible/
 BADS about to listen on 8443. Go to https://127.0.0.1:8443 for verifing...
 Or https://localhost.localdomain:8443
 default username: admin

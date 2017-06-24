@@ -12,9 +12,15 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this file. If not, see <http://www.gnu.org/licenses/>.
 ##
+#
+# Script Submitted and Deployment in production environments by:
+# Mykola Perehinets (mperehin)
+# Tel: +380 67 772 6910
+# mailto:mykola.perehinets@gmail.com
+#
 VERSION=23062017
 ##
-set -e
+#set -e
 case "$OSTYPE" in
   linux*)   OS="linux"  ;;
   *)        echo "Your operating system ('$OSTYPE') is not supported by BADS. Exiting." && exit 1 ;;

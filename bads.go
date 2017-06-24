@@ -1,3 +1,8 @@
+// Code Submitted and Deployment in production environments by:
+// Mykola Perehinets (mperehin)
+// Tel: +380 67 772 6910
+// mailto:mykola.perehinets@gmail.com
+
 package main
 
 import (
@@ -136,7 +141,7 @@ func main() {
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/done", done)
 	http.HandleFunc("favicon.ico", faviconHandler)
-	log.Printf("Starting Bacula Agent Deploy Server (BADS) front-end web service...")	
+	log.Printf("Starting Bacula Agent Deploy Server (BADS) front-end web service...")
 	log.Printf("BADS about to listen on 8443. Go to https://127.0.0.1:8443 for verifing...")
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("images"))))
 	err := http.ListenAndServeTLS(":8443", "server.crt", "server.key", context.ClearHandler(http.DefaultServeMux))
@@ -156,3 +161,4 @@ func done(w http.ResponseWriter, req *http.Request) {
 func logFunc(l string) {
 	log.Println(l)
 }
+
