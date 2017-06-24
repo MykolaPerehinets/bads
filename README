@@ -20,10 +20,11 @@ Verify configuration in /opt/bads/templates/todo.html
 Run ./install.sh
 
 # Deploy Bacula Agent Deploy Server to remotehost (use rsync)
-rsync -uvroghtpaz --rsync-path="ionice -c 3 nice -n 12 rsync" --progress --stats "/home/mperehin/LOG_FOR WORK/bads" root@ibacula.localhost.localdomain:/opt/
+rsync -uvroghtpaz --rsync-path="ionice -c 3 nice -n 12 rsync" --progress --stats "/home/mperehin/LOG_FOR WORK/bads" root@localhost.localdomain:/opt/
 
 Information and usage BADS web server
-https://localhost.localdomain:8443
+BADS about to listen on 8443. Go to https://127.0.0.1:8443 for verifing...
+Or https://localhost.localdomain:8443
 default username: admin
 default password: admin
 
