@@ -25,6 +25,8 @@
 #    - name: New task to interact with the servers
 
 
+
+
 #    - name: Audit Linux systems/services for correct backup process(Bacula Bare-Metal)
 #      command: /etc/bacula/scripts/audit_linux_system.sh || /bin/true
 #      args:
