@@ -22,13 +22,13 @@
 #    - name: Pause play to interact with the servers
 #      pause: prompt="This playbook paused... Hit <ENTER> to continue or <CTRL-C A> to abort"
 
-#    - name: Install new configuration files for Corporate Backup System Bacula(server side)
-#      copy: src="{{ item }}" dest="{{ bacula_conf_folder_disable }}" backup=yes owner=root group=root mode=0644
-#      with_fileglob:
-#       - ../files/conf.d/*
+    - name: Install new configuration files for Corporate Backup System Bacula(server side)
+      copy: src="{{ item }}" dest="{{ bacula_conf_folder_disable }}" backup=yes owner=root group=root mode=0644
+      with_fileglob:
+       - ../files/conf.d/*
 
-#    - name: Replace hostname in the Bacula Server config file
-#      replace: path="{{ bacula_conf_folder_disable }}bacula-dir_temp.conf" regexp='hostname' replace='{{ hostname_short }}' backup=yes
+    - name: Replace hostname in the Bacula Server config file
+      replace: path="{{ bacula_conf_folder_disable }}bacula-dir_temp.conf" regexp='hostname' replace='{{ hostname_short }}' backup=yes
 
     - name: Copy Bacula server config file to Ansible node
       synchronize:
@@ -67,11 +67,10 @@
 
 #    - debug: var=etckeeper
 
-#    - name: Audit Linux systems/services for correct backup process(Bacula Bare-Metal)
-#      command: /etc/bacula/scripts/audit_linux_system.sh || /bin/true
-#      args:
-#          executable: /bin/bash
+    - name: Audit Linux systems/services for correct backup process(Bacula Bare-Metal)
+      command: /etc/bacula/scripts/audit_linux_system.sh || /bin/true
+      args:
+          executable: /bin/bash
 
   handlers:
     - include: handlers.yml
-
