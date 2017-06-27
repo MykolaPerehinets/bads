@@ -12,7 +12,7 @@ import (
 	"log"
 	"net/http"
 	"os/exec"
-
+	// "time"
 	"github.com/gorilla/context"
 	"github.com/gorilla/sessions"
 )
@@ -75,19 +75,21 @@ func login(w http.ResponseWriter, req *http.Request) {
 	if req.Method == http.MethodPost {
 		un := req.FormValue("username")
 		p := req.FormValue("password")
-
+						
 		if un != userdb.Login && p != userdb.Password {
 			http.Error(w, "", http.StatusForbidden)
 			http.Error(w, "ERROR: Username and/or password do not match. So, verify it and please relogin. Thank you for understanding.", http.StatusForbidden)
 			logFunc("Client " + req.RemoteAddr + " visited to /login but ERROR: Username and/or password do not match." + " Username: " + req.FormValue("username") + ", Password: " + req.FormValue("password"))
-			http.Redirect(w, req, "/login", http.StatusSeeOther)
-			// tpl.ExecuteTemplate(w, "done.html", nil)
+			// timer := time.NewTimer(time.Second * 5)
+			// <-timer.C
+			logFunc("Client " + req.RemoteAddr + " visited to /login but ERROR: Timer 5 sec. expired. Automatic relogin...")
+			// http.Redirect(w, req, "/logout", http.StatusSeeOther)
+			// tpl.ExecuteTemplate(w, "error.html", nil)
 			return
 		}
 
 		session.Values["username"] = un
 		session.Save(req, w)
-
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}
@@ -140,6 +142,7 @@ func main() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/done", done)
+	http.HandleFunc("/error", error)
 	http.HandleFunc("favicon.ico", faviconHandler)
 	log.Printf("Starting Bacula Agent Deploy Server (BADS) front-end web service...")
 	log.Printf("BADS about to listen on 8443. Go to https://127.0.0.1:8443 for verifing...")
@@ -148,14 +151,20 @@ func main() {
 	log.Fatal(err)
 }
 
-func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "/images/favicon.ico")
+func faviconHandler(w http.ResponseWriter, req *http.Request) {
+	http.ServeFile(w, req, "/images/favicon.ico")
 }
 
 func done(w http.ResponseWriter, req *http.Request) {
 	logFunc("Client " + req.RemoteAddr + " visited to /done")
 
 	tpl.ExecuteTemplate(w, "done.html", false)
+}
+
+func error(w http.ResponseWriter, req *http.Request) {
+	logFunc("Client " + req.RemoteAddr + " visited to /error")
+	
+	tpl.ExecuteTemplate(w, "error.html", false)
 }
 
 func logFunc(l string) {
