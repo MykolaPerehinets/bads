@@ -37,7 +37,7 @@ fi
 ## Starting
 $DIR/env-var.sh
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
-sudo su root
+#sudo su root
 cd $ANSIBLEDIR
 ssh-agent bash
 ssh-add /root/.ssh/id_rsa
