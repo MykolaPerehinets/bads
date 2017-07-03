@@ -25,20 +25,22 @@ type user struct {
 }
 
 var (
+	hashKey  = []byte("33446a9dcf9ea060a0a6532b166da32f304af0de")
+	blockKey = []byte("33446a9dcf9ea060a0a6532b166da32f304af0de")
 	// cookiekey = securecookie.GenerateRandomKey()
-	hashKey   = []byte("33446a9dcf9ea060a0a6532b166da32f304af0de")
-	blockKey  = []byte("33446a9dcf9ea060a0a6532b166da32f304af0de")
 	cookiekey = securecookie.New(hashKey, blockKey)
 
 	store  = sessions.NewCookieStore([]byte("cookiekey"))
 	userdb user
-	tpl    *template.Template
+
+	tpl *template.Template
 )
 
 func index(w http.ResponseWriter, req *http.Request) {
 	logFunc("Client " + req.RemoteAddr + " visited to /")
 
 	if alreadyLoggedIn(w, req) {
+		logFunc("Client " + req.RemoteAddr + " redirected to /todo")
 		http.Redirect(w, req, "/todo", http.StatusSeeOther)
 	}
 
@@ -49,6 +51,7 @@ func todo(w http.ResponseWriter, req *http.Request) {
 	logFunc("Client " + req.RemoteAddr + " visited to /todo")
 
 	if !alreadyLoggedIn(w, req) {
+		logFunc("Client " + req.RemoteAddr + " redirected to /login")
 		http.Redirect(w, req, "/login", http.StatusSeeOther)
 		return
 	}
@@ -76,6 +79,7 @@ func login(w http.ResponseWriter, req *http.Request) {
 
 	session, err := store.Get(req, "session")
 	if err != nil {
+		logFunc("Client " + req.RemoteAddr + " redirected to /")
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}
@@ -90,11 +94,12 @@ func login(w http.ResponseWriter, req *http.Request) {
 			logFunc("Client " + req.RemoteAddr + " visited to /login but ERROR: Username and/or password do not match." + " Username: " + req.FormValue("username") + ", Password: " + req.FormValue("password"))
 			timer := time.NewTimer(time.Second * 5)
 			<-timer.C
-			logFunc("Client " + req.RemoteAddr + " visited to /login but ERROR: Timers expired. Automatic relogin...")
-			timer1 := time.NewTimer(time.Second * 10)
-			<-timer1.C
+			logFunc("Client " + req.RemoteAddr + " visited to /login but ERROR: Timer expired... Please relogin...")
+			// timer1 := time.NewTimer(time.Second * 10)
+			// <-timer1.C
 			// http.Redirect(w, req, "/logout", http.StatusSeeOther)
 			http.Redirect(w, req, "/error", http.StatusSeeOther)
+			logFunc("Client " + req.RemoteAddr + " redirected to /error")
 			tpl.ExecuteTemplate(w, "error.html", nil)
 			return
 		}
@@ -116,7 +121,7 @@ func logout(w http.ResponseWriter, req *http.Request) {
 	session.Values["username"] = ""
 	session.Save(req, w)
 
-	http.Redirect(w, req, "/logout", http.StatusSeeOther)
+	http.Redirect(w, req, "/login", http.StatusSeeOther)
 	tpl.ExecuteTemplate(w, "logout.html", nil)
 }
 
@@ -134,10 +139,50 @@ func alreadyLoggedIn(w http.ResponseWriter, req *http.Request) bool {
 	return false
 }
 
+func faviconHandler(w http.ResponseWriter, req *http.Request) {
+	logFunc("Client " + req.RemoteAddr + " requested favicon.ico")
+	http.ServeFile(w, req, "/images/favicon.ico")
+}
+
+func done(w http.ResponseWriter, req *http.Request) {
+	logFunc("Client " + req.RemoteAddr + " visited to /done")
+
+	tpl.ExecuteTemplate(w, "done.html", false)
+}
+
+func error(w http.ResponseWriter, req *http.Request) {
+	logFunc("Client " + req.RemoteAddr + " visited to /error")
+	session, _ := store.Get(req, "session")
+
+	session.Values["username"] = ""
+	session.Save(req, w)
+	// http.Redirect(w, req, "/login", http.StatusSeeOther)
+	tpl.ExecuteTemplate(w, "error.html", false)
+}
+
+func logFunc(l string) {
+	log.Println(l)
+}
+
 func main() {
 
 	userdb.Login = "admin"
+	// userdb.Login = "os.Getenv("usernamebads")"
+	fmt.Println("usernamebads:", userdb.Login)
+	// if userdb.Login != "" {
+	//	logFunc("Client " + " requested default usernamebads")
+	//	userdb.Login = "admin"
+	//	return
+	// }
+
 	userdb.Password = "admin"
+	// userdb.Password = "os.Getenv("passwordbads")"
+	fmt.Println("passwordbads:", userdb.Password)
+	// if userdb.Password != "" {
+	//	logFunc("Client " + " requested default passwordbads")
+	//	userdb.Password = "admin"
+	//	return
+	// }
 
 	store.Options = &sessions.Options{
 		// Domain:   "localhost.localdomain",
@@ -161,28 +206,4 @@ func main() {
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("images"))))
 	err := http.ListenAndServeTLS(":8443", "server.crt", "server.key", context.ClearHandler(http.DefaultServeMux))
 	log.Fatal(err)
-}
-
-func faviconHandler(w http.ResponseWriter, req *http.Request) {
-	http.ServeFile(w, req, "/images/favicon.ico")
-}
-
-func done(w http.ResponseWriter, req *http.Request) {
-	logFunc("Client " + req.RemoteAddr + " visited to /done")
-
-	tpl.ExecuteTemplate(w, "done.html", false)
-}
-
-func error(w http.ResponseWriter, req *http.Request) {
-	logFunc("Client " + req.RemoteAddr + " visited to /error")
-	// session, _ := store.Get(req, "session")
-
-	// session.Values["username"] = ""
-	// session.Save(req, w)
-
-	tpl.ExecuteTemplate(w, "error.html", false)
-}
-
-func logFunc(l string) {
-	log.Println(l)
 }

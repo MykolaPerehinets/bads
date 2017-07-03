@@ -1,7 +1,7 @@
 # Bacula Agent Deploy Server service script
 
 [Unit]
-Description=The Bacula Agent Deploy Server front-end(web)
+Description=Bacula Agent Deploy Server front-end(web)
 Documentation=https://github.com/MykolaPerehinets/bads
 After=network.target network-online.target local-fs.target remote-fs.target time-sync.target
 Wants=network.target network-online.target

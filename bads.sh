@@ -17,25 +17,25 @@
 # Mykola Perehinets (mperehin)
 # Tel: +380 67 772 6910
 # mailto:mykola.perehinets@gmail.com
-#
-VERSION=30062017
 ##
-#set -e
 case "$OSTYPE" in
   linux*)   OS="linux"  ;;
   *)        echo "Your operating system ('$OSTYPE') is not supported by BADS. Exiting." && exit 1 ;;
 esac
 ## Configuration
+VERSION=03072017
 LOGDIR=/var/log/bads
 ANSIBLEDIR=/etc/ansible/roles/InstallBaculaAgent
 DIR=/opt/bads
 DATE=$(date +%Y-%m-%d_%H:%M)
-##
+## Verifying
 if [[ ! -e $LOGDIR ]]; then
     mkdir -p $LOGDIR
 elif [[ ! -d $LOGDIR ]]; then
     echo "ERROR: $LOGDIR already exists but is not a directory... Please fix..." 2>&1
 fi
+## Starting
+$DIR/env-var.sh
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
 sudo su root
 cd $ANSIBLEDIR
@@ -44,9 +44,9 @@ ssh-add /root/.ssh/id_rsa
 sleep 3
 cd $DIR
 echo "-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
-echo "Starting The Bacula Agent Deploy Server (ver.$VERSION)... Starting at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "Starting Bacula Agent Deploy Server (ver.$VERSION)... Starting at $DATE..." >> $LOGDIR/bads.log 2>&1
 $DIR/bads >> $LOGDIR/bads.log 2>&1 &
 netstat -ntulp | grep bads >> $LOGDIR/bads.log 2>&1
-echo "Bacula Agent Deploy Server (ver.$VERSION) has been started successfully..."
+echo "Ok... Bacula Agent Deploy Server (ver.$VERSION) has been started successfully..."
 exit 0
 

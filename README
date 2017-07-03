@@ -5,7 +5,7 @@
 
 Description
 
-The Bacula Agent Deploy Server (BADS) is a simple web server writed on Golang for managing and deploying Backup Bacula Agent (bacula-client and configuration files) on host.
+Bacula Agent Deploy Server (BADS) is a simple web server writed on Golang for managing and deploying Backup Bacula Agent (bacula-client and configuration files) on host.
 This web solution uses Ansible playbook for automation installation Bacula Agent in users` hosts.
 NOTE: BADS is an Open-source project. I am very grateful to @opast (https://github.com/opast) for initial help!
 
@@ -28,6 +28,10 @@ Run ./install.sh
 
 # Deploy Bacula Agent Deploy Server to remotehost (use rsync)
 rsync -uvroghtpaz --rsync-path="ionice -c 3 nice -n 12 rsync" --progress --stats "/home/mperehin/LOG_FOR WORK/bads" root@localhost.localdomain:/opt/
+
+Run Bacula Agent Deploy Server (BADS) by manual
+cd /opt/bads
+./bads.sh
 
 Information and usage BADS web server
 Verify configuration in /opt/bads/ansible/
