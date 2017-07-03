@@ -11,3 +11,4 @@ Detail information in README file.
 Installation
 
 cd /opt   &&   git clone https://github.com/MykolaPerehinets/bads.git   &&   cd /opt/bads   &&   ./install.sh
+

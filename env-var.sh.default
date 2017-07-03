@@ -18,7 +18,7 @@
 # Tel: +380 67 772 6910
 # mailto:mykola.perehinets@gmail.com
 #
-VERSION=30062017
+VERSION=03072017
 ##
 #set -e
 case "$OSTYPE" in
@@ -27,8 +27,8 @@ case "$OSTYPE" in
 esac
 ## Configuration
 LOGDIR=/var/log/bads
-ANSIBLEDIR=/etc/ansible/roles/InstallBaculaAgent
 DIR=/opt/bads
+ANSIBLEDIR=/etc/ansible/roles/InstallBaculaAgent
 DATE=$(date +%Y-%m-%d_%H:%M)
 ##
 if [[ ! -e $LOGDIR ]]; then
@@ -37,16 +37,22 @@ elif [[ ! -d $LOGDIR ]]; then
     echo "ERROR: $LOGDIR already exists but is not a directory... Please fix..." 2>&1
 fi
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
-sudo su root
-cd $ANSIBLEDIR
-ssh-agent bash
-ssh-add /root/.ssh/id_rsa
-sleep 3
+#sudo su root
+#cd /etc/ansible/roles/InstallBaculaAgent
+#ssh-agent bash
+#ssh-add /root/.ssh/id_rsa
+#sleep 3
 cd $DIR
+# Verify configuration in /opt/bads/install.sh and /opt/bads/bads.sh
+# Verify configuration in /opt/bads/templates/todo.html
+export SSH-RSA_KEY="SSH-RSA AAAA ............... ........... " >> $LOGDIR/bads.log 2>&1
+export DOCUMENTATION="https://localhost.localdomain" >> $LOGDIR/bads.log 2>&1
+# Verify configuration in /opt/bads/bads.go
+export username=admin >> $LOGDIR/bads.log 2>&1
+export password=admin >> $LOGDIR/bads.log 2>&1
+# Verify configuration in /etc/ansible/roles/InstallBaculaAgent
 echo "-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
-echo "Starting The Bacula Agent Deploy Server (ver.$VERSION)... Starting at $DATE..." >> $LOGDIR/bads.log 2>&1
-$DIR/bads >> $LOGDIR/bads.log 2>&1 &
-netstat -ntulp | grep bads >> $LOGDIR/bads.log 2>&1
-echo "Bacula Agent Deploy Server (ver.$VERSION) has been started successfully..."
+echo "Exporting The Bacula Agent Deploy Server (ver.$VERSION) environment variable... Exported at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "Bacula Agent Deploy Server (ver.$VERSION) environment variable has been deployed successfully..."
 exit 0
 

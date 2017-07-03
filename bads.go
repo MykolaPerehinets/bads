@@ -12,8 +12,10 @@ import (
 	"log"
 	"net/http"
 	"os/exec"
-	// "time"
+	"time"
+
 	"github.com/gorilla/context"
+	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 )
 
@@ -23,7 +25,12 @@ type user struct {
 }
 
 var (
-	store  = sessions.NewCookieStore([]byte("33446a9dcf9ea060a0a6532b166da32f304af0de"))
+	// cookiekey = securecookie.GenerateRandomKey()
+	hashKey   = []byte("33446a9dcf9ea060a0a6532b166da32f304af0de")
+	blockKey  = []byte("33446a9dcf9ea060a0a6532b166da32f304af0de")
+	cookiekey = securecookie.New(hashKey, blockKey)
+
+	store  = sessions.NewCookieStore([]byte("cookiekey"))
 	userdb user
 	tpl    *template.Template
 )
@@ -56,6 +63,7 @@ func todo(w http.ResponseWriter, req *http.Request) {
 		arg := "-la"
 		out, _ := exec.Command("ls", arg).Output()
 		io.WriteString(w, fmt.Sprintf("%s", out))
+
 		// tpl.ExecuteTemplate(w, "done.html", nil)
 		return
 	}
@@ -75,21 +83,25 @@ func login(w http.ResponseWriter, req *http.Request) {
 	if req.Method == http.MethodPost {
 		un := req.FormValue("username")
 		p := req.FormValue("password")
-						
+
 		if un != userdb.Login && p != userdb.Password {
-			http.Error(w, "", http.StatusForbidden)
-			http.Error(w, "ERROR: Username and/or password do not match. So, verify it and please relogin. Thank you for understanding.", http.StatusForbidden)
+			// http.Error(w, "", http.StatusForbidden)
+			// http.Error(w, "ERROR: Username and/or password do not match. So, please verify it and relogin. Thank you for understanding.", http.StatusForbidden)
 			logFunc("Client " + req.RemoteAddr + " visited to /login but ERROR: Username and/or password do not match." + " Username: " + req.FormValue("username") + ", Password: " + req.FormValue("password"))
-			// timer := time.NewTimer(time.Second * 5)
-			// <-timer.C
-			logFunc("Client " + req.RemoteAddr + " visited to /login but ERROR: Timer 5 sec. expired. Automatic relogin...")
+			timer := time.NewTimer(time.Second * 5)
+			<-timer.C
+			logFunc("Client " + req.RemoteAddr + " visited to /login but ERROR: Timers expired. Automatic relogin...")
+			timer1 := time.NewTimer(time.Second * 10)
+			<-timer1.C
 			// http.Redirect(w, req, "/logout", http.StatusSeeOther)
-			// tpl.ExecuteTemplate(w, "error.html", nil)
+			http.Redirect(w, req, "/error", http.StatusSeeOther)
+			tpl.ExecuteTemplate(w, "error.html", nil)
 			return
 		}
 
 		session.Values["username"] = un
 		session.Save(req, w)
+
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}
@@ -104,7 +116,7 @@ func logout(w http.ResponseWriter, req *http.Request) {
 	session.Values["username"] = ""
 	session.Save(req, w)
 
-	// http.Redirect(w, req, "/login", http.StatusSeeOther)
+	http.Redirect(w, req, "/logout", http.StatusSeeOther)
 	tpl.ExecuteTemplate(w, "logout.html", nil)
 }
 
@@ -163,11 +175,14 @@ func done(w http.ResponseWriter, req *http.Request) {
 
 func error(w http.ResponseWriter, req *http.Request) {
 	logFunc("Client " + req.RemoteAddr + " visited to /error")
-	
+	// session, _ := store.Get(req, "session")
+
+	// session.Values["username"] = ""
+	// session.Save(req, w)
+
 	tpl.ExecuteTemplate(w, "error.html", false)
 }
 
 func logFunc(l string) {
 	log.Println(l)
 }
-

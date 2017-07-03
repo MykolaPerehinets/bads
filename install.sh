@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation, either version 3 of the License, or
@@ -18,18 +18,20 @@
 # Tel: +380 67 772 6910
 # mailto:mykola.perehinets@gmail.com
 #
-VERSION=23062017
+VERSION=03072017
 ##
 #set -e
 case "$OSTYPE" in
   linux*)   OS="linux"  ;;
   *)        echo "Your operating system ('$OSTYPE') is not supported by BADS. Exiting." && exit 1 ;;
 esac
-##
+## Configuration
 LOGROTATEDIR=/etc/logrotate.d
 SERVICEDIR=/usr/lib/systemd/system
 LOGDIR=/var/log/bads
+ANSIBLEDIR=/etc/ansible/roles/InstallBaculaAgent
 DIR=/opt/bads
+ENVVAR=env-var.sh
 DATE=$(date +%Y-%m-%d_%H:%M)
 ##
 if [[ ! -e $LOGDIR ]]; then
@@ -37,9 +39,9 @@ if [[ ! -e $LOGDIR ]]; then
 elif [[ ! -d $LOGDIR ]]; then
     echo "ERROR: $LOGDIR already exists but is not a directory... Please fix..." 2>&1
 fi
-#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
 sudo su root
-#cd /etc/ansible/roles/InstallBaculaAgent
+#cd $ANSIBLEDIR
 #ssh-agent bash
 #ssh-add /root/.ssh/id_rsa
 #sleep 3
@@ -50,7 +52,15 @@ cp -fuvb $DIR/bads.service $SERVICEDIR/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 systemctl -l enable bads.service >> $LOGDIR/bads.log 2>&1
 systemctl -l start bads.service >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 systemctl -l status bads.service >> $LOGDIR/bads.log 2>&1
+if [[ ! -e $ENVVAR ]]; then
+    cp -fuvb $DIR/env-var.sh.default $DIR/$ENVVAR >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
+elif [[ ! -d $LOGDIR ]]; then
+    cp -fuvb $DIR/env-var.sh.default $DIR/$ENVVAR.rpmnew >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
+fi
+chmod u+x $DIR/$ENVVAR
+cp -fuvb $DIR/ansible/* $ANSIBLEDIR/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 echo "-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
 echo "Instaling The Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
 echo "Bacula Agent Deploy Server (ver.$VERSION) has been deployed successfully..."
 exit 0
+

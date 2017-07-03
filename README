@@ -15,7 +15,6 @@ Installation
 cd /opt
 Clone repo to folder git clone https://github.com/MykolaPerehinets/bads.git
 cd /opt/bads
-#Reconfigure /opt/bads/bads.conf
 Verify configuration in /opt/bads/templates/todo.html
 Verify configuration in /opt/bads/ansible/
 Run ./install.sh
@@ -23,7 +22,6 @@ Run ./install.sh
 # Update Bacula Agent Deploy Server to localhost
 cd /opt/bads
 Pull repo to folder git pull https://github.com/MykolaPerehinets/bads.git
-#Reconfigure /opt/bads/bads.conf
 Verify configuration in /opt/bads/templates/todo.html
 Verify configuration in /opt/bads/ansible/
 Run ./install.sh
@@ -41,3 +39,4 @@ default password: admin
 This folder contains a collection of Go programs and libraries
 cd /opt/bads
 cat ./bads.go
+
