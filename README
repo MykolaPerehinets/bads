@@ -11,7 +11,7 @@ NOTE: BADS is an Open-source project. I am very grateful to @opast (https://gith
 
 Installation
 
-# Deploy Bacula Agent Deploy Server to localhost
+Deploy Bacula Agent Deploy Server to localhost
 cd /opt
 Clone repo to folder git clone https://github.com/MykolaPerehinets/bads.git
 cd /opt/bads
@@ -19,26 +19,41 @@ Verify configuration in /opt/bads/templates/todo.html
 Verify configuration in /opt/bads/ansible/
 Run ./install.sh
 
-# Update Bacula Agent Deploy Server to localhost
+Update
+
+Update Bacula Agent Deploy Server to localhost
 cd /opt/bads
 Pull repo to folder git pull https://github.com/MykolaPerehinets/bads.git
 Verify configuration in /opt/bads/templates/todo.html
 Verify configuration in /opt/bads/ansible/
 Run ./install.sh
 
-# Deploy Bacula Agent Deploy Server to remotehost (use rsync)
+Deploy Bacula Agent Deploy Server to remotehost (use rsync)
 rsync -uvroghtpaz --rsync-path="ionice -c 3 nice -n 12 rsync" --progress --stats "/home/mperehin/LOG_FOR WORK/bads" root@localhost.localdomain:/opt/
 
+Runing
+
 Run Bacula Agent Deploy Server (BADS) by manual
+Verify and create SSH ansible key...
+Verify environment variable configuration in /opt/bads/env-var.sh
 cd /opt/bads
-./bads.sh
+./runbads.sh
 
 Information and usage BADS web server
-Verify configuration in /opt/bads/ansible/
-BADS about to listen on 8443. Go to https://127.0.0.1:8443 for verifing...
-Or https://localhost.localdomain:8443
-default username: admin
-default password: admin
+
+Verify configuration in /opt/bads/ansible/ or /etc/ansible/roles/InstallBaculaAgent after deploy
+Verify and create SSH ansible key...
+Verify and configure ansible playbooks...
+BADS about to listen on 8443 port. Go to https://127.0.0.1:8443 for verifing...
+
+https://localhost.localdomain:8443
+Default username: admin
+Default password: admin
+
+Detail information about process
+netstat -ntulp | grep bads
+
+Source code
 
 This folder contains a collection of Go programs and libraries
 cd /opt/bads

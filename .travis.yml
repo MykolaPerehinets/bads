@@ -1,0 +1,43 @@
+sudo: required
+
+env:
+  matrix:
+  - OS_TYPE=centos OS_VERSION=6
+  - OS_TYPE=centos OS_VERSION=7
+
+services:
+  - docker
+
+before_install:
+  - sudo yum update -y
+  - echo 'DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock -s devicemapper"' | sudo tee /etc/default/docker > /dev/null
+  - sudo service docker restart
+  - sleep 5
+  - sudo docker pull centos:centos${OS_VERSION}
+
+language: go
+
+script:
+  - export CC=gcc-4.8
+  - export CXX=g++-4.8
+
+  - tests/setup_tests.sh ${OS_VERSION}
+
+
+  - git clone https://github.com/rumpkernel/rumprun
+
+
+  - cd rumprun && git submodule update --init
+  - CC=cc ./build-rr.sh hw 1> /dev/null
+  - mkdir $HOME/gopath/src/github.com/deferpanic/gorump/rumprun/build &&  tar -zcvf rumprun.tar.gz rumprun/ && mv rumprun.tar.gz $HOME/gopath/src/github.com/deferpanic/gorump/rumprun/build/.
+  - cd $HOME/gopath/src/github.com/deferpanic/gorump/go/src && CGO_ENABLED=1 GOROOT_BOOTSTRAP=$GOROOT GOOS=netbsd GOARCH=amd64 ./make.bash
+  - cd $HOME/gopath/src/github.com/deferpanic/gorump/test/gc_test && GOROOT=$HOME/gopath/src/github.com/deferpanic/gorump/go PATH=$PATH:$HOME/gopath/src/github.com/deferpanic/gorump/rumprun/rumprun/bin make && ./verify_gc.sh
+  # - mkdir $HOME/gopath/src/github.com/deferpanic/gorump/build && cd $HOME/gopath/src/github.com/deferpanic/gorump && tar -zcvf gorump.tar.gz go/ && mv gorump.tar.gz build/.
+
+notifications:
+  email:
+    recipients:
+      - mykola.perehinets@gmail.com
+
+#deploy:
+

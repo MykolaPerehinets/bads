@@ -23,9 +23,8 @@ RestartSec=15s
 StartLimitInterval=60s
 StartLimitBurst=5
 Environment=PATH=/opt/bads/:$PATH
-#ExecStart=/usr/bin/bash -c '/opt/bads/bads'
-#ExecStart=/usr/bin/sh '/opt/bads/bads.sh'
-ExecStart=/opt/bads/bads.sh
+#ExecStart=/usr/bin/bash -c '/opt/bads/runbads.sh'
+ExecStart=/opt/bads/runbads.sh
 ExecReload=/bin/kill -HUP $MAINPID
 RemainAfterExit=yes
 PrivateDevices=yes
@@ -36,3 +35,4 @@ PrivateTmp=true
 [Install]
 WantedBy=multi-user.target
 Alias=bads.service
+

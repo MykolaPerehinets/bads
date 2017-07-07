@@ -1,0 +1,72 @@
+#!/bin/bash
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this file. If not, see <http://www.gnu.org/licenses/>.
+##
+#
+# Script Submitted and Deployment in production environments by:
+# Mykola Perehinets (mperehin)
+# Tel: +380 67 772 6910
+# mailto:mykola.perehinets@gmail.com
+#
+##
+case "$OSTYPE" in
+  linux*)   OS="linux"  ;;
+  *)        echo "Your operating system ('$OSTYPE') is not supported by BADS. Exiting." && exit 1 ;;
+esac
+## Configuration
+VERSION=07072017
+LOGDIR=/var/log/bads
+DIR=/opt/bads
+ANSIBLEDIR=/etc/ansible/roles/InstallBaculaAgent
+DATE=$(date +%Y-%m-%d_%H:%M)
+## Verifying
+if [[ ! -e $LOGDIR ]]; then
+    mkdir -p $LOGDIR
+elif [[ ! -d $LOGDIR ]]; then
+    echo "ERROR: $LOGDIR already exists but is not a directory... Please fix..." 2>&1
+fi
+## Exporting
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
+#sudo su root
+cd $DIR
+# Verify configuration in /opt/bads/install.sh and /opt/bads/runbads.sh
+export VERSION=$VERSION >> $LOGDIR/bads.log 2>&1
+echo "VERSION = '$VERSION'"
+#
+# Verify configuration in /opt/bads/templates/todo.html
+export SSH-RSA_KEY="SSH-RSA AAAA ............... ........... " >> $LOGDIR/bads.log 2>&1
+echo "SSH-RSA_KEY = '$SSH-RSA_KEY'"
+export DOCUMENTATION="https://localhost.localdomain" >> $LOGDIR/bads.log 2>&1
+echo "DOCUMENTATION = '$DOCUMENTATION'"
+#
+# Verify configuration in /opt/bads/bads.go
+export username=admin >> $LOGDIR/bads.log 2>&1
+echo "username = '$username'"
+export password=admin >> $LOGDIR/bads.log 2>&1
+echo "password = '$password'"
+#
+export hashKey=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1) >> $LOGDIR/bads.log 2>&1
+echo "hashKey = '$hashKey'"
+export blockKey=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1) >> $LOGDIR/bads.log 2>&1
+echo "blockKey = '$blockKey'"
+#
+# Verify configuration in /etc/ansible/roles/InstallBaculaAgent
+echo "Please verify configuration in /etc/ansible/roles/InstallBaculaAgent:"
+cat /etc/ansible/roles/InstallBaculaAgent/vars.yml
+echo ""
+#
+echo "-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
+echo "Exporting Bacula Agent Deploy Server (ver.$VERSION) environment variable... Exported at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "Ok... Bacula Agent Deploy Server (ver.$VERSION) environment variable has been deployed successfully..."
+exit 0
+
