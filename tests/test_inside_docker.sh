@@ -98,7 +98,7 @@ cat /var/log/bads.err
 netstat -ntulp | grep bads
 
 echo "-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
-echo "TESTING: Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "TESTING: Bacula Agent Deploy Server (ver.$VERSION)... Instaled and TESTED at $DATE..." >> $LOGDIR/bads.log 2>&1
 echo "TESTING: Ok... Bacula Agent Deploy Server (ver.$VERSION) has been TESTED successfully..."
 exit 0
 

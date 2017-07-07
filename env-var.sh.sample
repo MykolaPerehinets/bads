@@ -66,7 +66,7 @@ cat /etc/ansible/roles/InstallBaculaAgent/vars.yml
 echo ""
 #
 echo "-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
-echo "Exporting Bacula Agent Deploy Server (ver.$VERSION) environment variable... Exported at $DATE..." >> $LOGDIR/bads.log 2>&1
-echo "Ok... Bacula Agent Deploy Server (ver.$VERSION) environment variable has been deployed successfully..."
+echo "EXPORTING: Bacula Agent Deploy Server (ver.$VERSION) environment variable... Exported at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "EXPORTING: Ok... Bacula Agent Deploy Server (ver.$VERSION) environment variable has been deployed successfully..."
 exit 0
 

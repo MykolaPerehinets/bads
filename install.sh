@@ -61,7 +61,7 @@ $DIR/$ENVVAR
 #ssh-add /root/.ssh/id_rsa
 #sleep 3
 echo "-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
-echo "Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
-echo "Ok... Bacula Agent Deploy Server (ver.$VERSION) has been deployed successfully..."
+echo "INSTALLING: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "INSTALLING: Ok... Bacula Agent Deploy Server (ver.$VERSION) has been deployed successfully..."
 exit 0
 
