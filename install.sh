@@ -29,6 +29,7 @@ LOGROTATEDIR=/etc/logrotate.d
 SERVICEDIR=/usr/lib/systemd/system
 LOGDIR=/var/log/bads
 ANSIBLEDIR=/etc/ansible/roles/InstallBaculaAgent
+ANSIBLEDIRDEPLOY=/etc/ansible
 DIR=/opt/bads
 ENVVAR=env-var.sh
 DATE=$(date +%Y-%m-%d_%H:%M)
@@ -65,7 +66,7 @@ elif [[ ! -d $LOGDIR ]]; then
 fi
 chmod u+x $DIR/$ENVVAR
 echo "Deploy Ansible playbooks..." >> $LOGDIR/bads.log
-/bin/cp -fuvb $DIR/ansible/* $ANSIBLEDIR/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
+/bin/cp -fuvb $DIR/ansible/* $ANSIBLEDIRDEPLOY/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 #cd $ANSIBLEDIR
 #ssh-agent bash
 #ssh-add /root/.ssh/id_rsa
