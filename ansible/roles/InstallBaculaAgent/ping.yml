@@ -17,7 +17,7 @@
     - name: Test connection
       ping:
 
-#    - debug: var=ansible_distribution
+    - debug: var=ansible_distribution
 
   handlers:
     - include: handlers.yml

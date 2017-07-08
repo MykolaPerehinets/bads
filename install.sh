@@ -74,8 +74,8 @@ chmod u+x $DIR/$ENVVAR
 echo "Deploy Ansible playbooks..." >> $LOGDIR/bads.log
 /bin/cp -fuvb $DIR/ansible/* $ANSIBLEDIRDEPLOY/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 #cd $ANSIBLEDIR
-#ssh-agent bash
-#ssh-add /root/.ssh/id_rsa
+#ssh-agent bash >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err &
+#ssh-add /root/.ssh/id_rsa >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err &
 #sleep 3
 echo "Deploy $ENVVAR..." >> $LOGDIR/bads.log
 $DIR/$ENVVAR

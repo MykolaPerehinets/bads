@@ -86,6 +86,7 @@ echo "" >> $LOGDIR/bads.log 2>&1
 #
 echo "EXPORT:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
 echo "EXPORT: Exporting Bacula Agent Deploy Server (ver.$VERSION) environment variables... Exported at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "EXPORT: Ok... Bacula Agent Deploy Server (ver.$VERSION) environment variable has been deployed successfully..." >> $LOGDIR/bads.log 2>&1
 echo "EXPORT: Ok... Bacula Agent Deploy Server (ver.$VERSION) environment variable has been deployed successfully..."
 exit 0
 

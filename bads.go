@@ -66,8 +66,10 @@ func todo(w http.ResponseWriter, req *http.Request) {
 		fmt.Println(hostname, ipaddress)
 		logFunc("Client " + req.RemoteAddr + " deployed Bacula Agent to host (FQDN): " + req.FormValue("hostname") + ", host IP ADDRESS: " + req.FormValue("ipaddress"))
 
-		arg := "-la"
-		out, _ := exec.Command("ls", arg).Output()
+		// arg := "-la"
+		arg := ""
+		// out, _ := exec.Command("ls", arg).Output()
+		out, _ := exec.Command("runansible.sh", arg).Output()
 		io.WriteString(w, fmt.Sprintf("%s", out))
 
 		// tpl.ExecuteTemplate(w, "done.html", nil)

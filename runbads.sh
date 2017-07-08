@@ -39,24 +39,27 @@ fi
 ## Starting
 cd $DIR
 echo "START:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
-echo "START: Starting Bacula Agent Deploy Server (ver.$VERSION)... BADS start at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "START: Starting Bacula Agent Deploy Server (ver.$VERSION)... The BADS start at $DATE..." >> $LOGDIR/bads.log 2>&1
 #echo "" >> $LOGDIR/bads.log 2>&1
 echo "START: Deploy $ENVVAR..." >> $LOGDIR/bads.log
 $DIR/$ENVVAR
+sleep 3
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
 #sudo su root
-cd $ANSIBLEDIR
-ssh-agent bash
-ssh-add /root/.ssh/id_rsa 2>&1 &
-sleep 3
+#cd $ANSIBLEDIR
+#ssh-agent bash >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err &
+#ssh-add /root/.ssh/id_rsa >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err &
+#sleep 3
 cd $DIR
 echo "START:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
-echo "START: Starting Bacula Agent Deploy Server (ver.$VERSION)... BADS start at $DATE..." >> $LOGDIR/bads.log 2>&1
-$DIR/bads >> $LOGDIR/bads.log 2>&1 &
+echo "START: Starting Bacula Agent Deploy Server (ver.$VERSION)... The BADS start at $DATE..." >> $LOGDIR/bads.log 2>&1
+$DIR/bads >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err &
 sleep 3
 echo "START: Status of bads.service:" >> $LOGDIR/bads.log
+echo "START: Status of bads.service:"
 netstat -ntulp | grep bads >> $LOGDIR/bads.log 2>&1
 netstat -ntulp | grep bads
+echo "START: Ok... Bacula Agent Deploy Server (ver.$VERSION) has been started successfully..." >> $LOGDIR/bads.log 2>&1
 echo "START: Ok... Bacula Agent Deploy Server (ver.$VERSION) has been started successfully..."
 exit 0
 
