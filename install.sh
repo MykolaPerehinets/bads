@@ -54,7 +54,6 @@ logrotate -f /etc/logrotate.conf >> $LOGDIR/bads.log 2>&1
 # Proceed install procedure
 echo "INSTALL:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
 echo "INSTALL: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
-echo "INSTALL: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE... Detail info in $LOGDIR..."
 #echo "" >> $LOGDIR/bads.log
 echo "Copy bads.service..." >> $LOGDIR/bads.log
 /bin/cp -fuvb $DIR/bads.service $SERVICEDIR/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
