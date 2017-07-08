@@ -9,6 +9,15 @@ Bacula Agent Deploy Server (BADS) is a simple web server writed on Golang for ma
 This web solution uses Ansible playbook for automation installation Bacula Agent in users` hosts.
 NOTE: BADS is an Open-source project. I am very grateful to @opast (https://github.com/opast) for initial help!
 
+# First, install all the needed packages
+yum -y install yum-plugin-priorities ansible wget git tar
+
+# Install the Go tools
+# Download the archive and extract it into /usr/local, creating a Go tree in /usr/local/go
+wget -c https://storage.googleapis.com/golang/go$GOVERSION.$OS-$ARCH.tar.gz
+tar -C /usr/local -xzf go$GOVERSION.$OS-$ARCH.tar.gz
+export PATH=/usr/local/go/bin:$PATH
+
 Installation
 
 Deploy Bacula Agent Deploy Server to localhost
@@ -39,7 +48,7 @@ Verify environment variable configuration in /opt/bads/env-var.sh
 cd /opt/bads
 ./runbads.sh
 
-Information and usage BADS web server
+Basic information about usage BADS web server
 
 Verify configuration in /opt/bads/ansible/ or /etc/ansible/roles/InstallBaculaAgent after deploy
 Verify and create SSH ansible key...
