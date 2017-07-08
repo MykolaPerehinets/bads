@@ -14,6 +14,7 @@ yum -y install yum-plugin-priorities ansible wget git tar
 
 # Install the Go tools
 # Download the archive and extract it into /usr/local, creating a Go tree in /usr/local/go
+sudo su root
 wget -c https://storage.googleapis.com/golang/go$GOVERSION.$OS-$ARCH.tar.gz
 tar -C /usr/local -xzf go$GOVERSION.$OS-$ARCH.tar.gz
 export PATH=/usr/local/go/bin:$PATH
@@ -21,6 +22,7 @@ export PATH=/usr/local/go/bin:$PATH
 Installation
 
 Deploy Bacula Agent Deploy Server to localhost
+sudo su root
 cd /opt
 Clone repo to folder git clone https://github.com/MykolaPerehinets/bads.git
 cd /opt/bads
@@ -31,6 +33,7 @@ Run ./install.sh
 Update
 
 Update Bacula Agent Deploy Server to localhost
+sudo su root
 cd /opt/bads
 Pull repo to folder git pull https://github.com/MykolaPerehinets/bads.git
 Verify configuration in /opt/bads/templates/todo.html
@@ -38,6 +41,7 @@ Verify configuration in /opt/bads/ansible/
 Run ./install.sh
 
 Deploy Bacula Agent Deploy Server to remotehost (use rsync)
+sudo su root
 rsync -uvroghtpaz --rsync-path="ionice -c 3 nice -n 12 rsync" --progress --stats "/home/mperehin/LOG_FOR WORK/bads" root@localhost.localdomain:/opt/
 
 Runing
@@ -45,6 +49,7 @@ Runing
 Run Bacula Agent Deploy Server (BADS) by manual
 Verify and create SSH ansible key...
 Verify environment variable configuration in /opt/bads/env-var.sh
+sudo su root
 cd /opt/bads
 ./runbads.sh
 
@@ -60,6 +65,7 @@ Default username: admin
 Default password: admin
 
 Detail information about process
+sudo su root
 netstat -ntulp | grep bads
 
 Source code

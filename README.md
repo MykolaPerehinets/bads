@@ -10,5 +10,9 @@ Detail information about this in README file.
 
 Installation
 
-cd /opt   &&   git clone https://github.com/MykolaPerehinets/bads.git   &&   cd /opt/bads   &&   ./install.sh
+sudo su root   &&   cd /opt   &&   git clone https://github.com/MykolaPerehinets/bads.git   &&   cd /opt/bads   &&   ./install.sh
+
+Usage
+
+BADS about to listen on 8443 port. Go to https://127.0.0.1:8443 for verifing...
 

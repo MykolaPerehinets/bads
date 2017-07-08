@@ -40,14 +40,14 @@ fi
 cd $DIR
 echo "START:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
 echo "START: Starting Bacula Agent Deploy Server (ver.$VERSION)... BADS start at $DATE..." >> $LOGDIR/bads.log 2>&1
-echo "" >> $LOGDIR/bads.log 2>&1
+#echo "" >> $LOGDIR/bads.log 2>&1
 echo "START: Deploy $ENVVAR..." >> $LOGDIR/bads.log
 $DIR/$ENVVAR
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
 #sudo su root
 cd $ANSIBLEDIR
 ssh-agent bash
-ssh-add /root/.ssh/id_rsa
+ssh-add /root/.ssh/id_rsa 2>&1 &
 sleep 3
 cd $DIR
 echo "START:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1

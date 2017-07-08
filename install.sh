@@ -45,11 +45,17 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
 cd $DIR
 echo "INSTALL:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
 echo "INSTALL: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
-echo "" >> $LOGDIR/bads.log
+echo "INSTALL: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE... Detail info in $LOGDIR..."
+#echo "" >> $LOGDIR/bads.log
 echo "Copy bads.logrotate..." >> $LOGDIR/bads.log
 /bin/cp -fuvb $DIR/bads.logrotate $LOGROTATEDIR/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 echo "Restart logrotate..." >> $LOGDIR/bads.log
 logrotate -f /etc/logrotate.conf >> $LOGDIR/bads.log 2>&1
+# Proceed install procedure
+echo "INSTALL:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
+echo "INSTALL: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "INSTALL: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE... Detail info in $LOGDIR..."
+#echo "" >> $LOGDIR/bads.log
 echo "Copy bads.service..." >> $LOGDIR/bads.log
 /bin/cp -fuvb $DIR/bads.service $SERVICEDIR/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 echo "Enable bads.service..." >> $LOGDIR/bads.log
@@ -58,7 +64,7 @@ echo "Start bads.service..." >> $LOGDIR/bads.log
 systemctl -l start bads.service >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 echo "Status of bads.service:" >> $LOGDIR/bads.log
 systemctl -l status bads.service >> $LOGDIR/bads.log 2>&1
-echo "Create and copy env-var.sh from sample..." >> $LOGDIR/bads.log
+echo "Create (copy) env-var.sh from sample..." >> $LOGDIR/bads.log
 if [[ ! -e $ENVVAR ]]; then
     /bin/cp -fuvb $DIR/env-var.sh.sample $DIR/$ENVVAR >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 elif [[ ! -d $LOGDIR ]]; then
@@ -75,6 +81,7 @@ echo "Deploy $ENVVAR..." >> $LOGDIR/bads.log
 $DIR/$ENVVAR
 echo "INSTALL:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
 echo "INSTALL: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "INSTALL: Ok... Bacula Agent Deploy Server (ver.$VERSION) has been deployed successfully..." >> $LOGDIR/bads.log 2>&1
 echo "INSTALL: Ok... Bacula Agent Deploy Server (ver.$VERSION) has been deployed successfully..."
 cd /
 exit 0

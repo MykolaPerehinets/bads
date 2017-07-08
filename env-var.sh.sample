@@ -41,41 +41,46 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
 cd $DIR
 echo "EXPORT:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
 echo "EXPORT: Exporting Bacula Agent Deploy Server (ver.$VERSION) environment variables... Exported at $DATE..." >> $LOGDIR/bads.log 2>&1
-echo "" >> $LOGDIR/bads.log 2>&1
+echo "EXPORT: Exporting Bacula Agent Deploy Server (ver.$VERSION) environment variables... Exported at $DATE..."
+#echo "" >> $LOGDIR/bads.log 2>&1
 #
 # Verify configuration in /opt/bads/install.sh and /opt/bads/runbads.sh
-export VERSION = $VERSION >> $LOGDIR/bads.log 2>&1
-echo "VERSION = $VERSION" >> $LOGDIR/bads.log 2>&1
-echo "VERSION = $VERSION"
+export VERSION=$VERSION >> $LOGDIR/bads.log 2>&1
+echo "VERSION=$VERSION" >> $LOGDIR/bads.log 2>&1
+echo "VERSION=$VERSION"
 #
 # Verify configuration in /opt/bads/templates/todo.html
-export SSH-RSA_KEY = "SSH-RSA AAAA ............... ........... " >> $LOGDIR/bads.log 2>&1
-echo "SSH-RSA_KEY = $SSH-RSA_KEY" >> $LOGDIR/bads.log 2>&1
-echo "SSH-RSA_KEY = $SSH-RSA_KEY"
-export DOCUMENTATION = "https://localhost.localdomain" >> $LOGDIR/bads.log 2>&1
-echo "DOCUMENTATION = $DOCUMENTATION" >> $LOGDIR/bads.log 2>&1
-echo "DOCUMENTATION = $DOCUMENTATION"
+export SSHRSAKEY="SSH-RSA AAAA ............... ........... " >> $LOGDIR/bads.log 2>&1
+echo "SSHRSAKEY=$SSHRSAKEY" >> $LOGDIR/bads.log 2>&1
+echo "SSHRSAKEY=$SSHRSAKEY"
+export DOCUMENTATION="https://localhost.localdomain" >> $LOGDIR/bads.log 2>&1
+echo "DOCUMENTATION=$DOCUMENTATION" >> $LOGDIR/bads.log 2>&1
+echo "DOCUMENTATION=$DOCUMENTATION"
 #
 # Verify configuration in /opt/bads/bads.go
-export username = admin >> $LOGDIR/bads.log 2>&1
-echo "username = $username" >> $LOGDIR/bads.log 2>&1
-echo "username = $username"
-export password = admin >> $LOGDIR/bads.log 2>&1
-echo "password = $password" >> $LOGDIR/bads.log 2>&1
-echo "password = $password"
-export hashKey = $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1) >> $LOGDIR/bads.log 2>&1
-echo "hashKey = $hashKey" >> $LOGDIR/bads.log 2>&1
-echo "hashKey = $hashKey"
-export blockKey = $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1) >> $LOGDIR/bads.log 2>&1
-echo "blockKey = $blockKey" >> $LOGDIR/bads.log 2>&1
-echo "blockKey = $blockKey"
+export username=admin >> $LOGDIR/bads.log 2>&1
+echo "username=$username" >> $LOGDIR/bads.log 2>&1
+echo "username=$username"
+export password=admin >> $LOGDIR/bads.log 2>&1
+echo "password=$password" >> $LOGDIR/bads.log 2>&1
+echo "password=$password"
+export hashKey=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1) >> $LOGDIR/bads.log 2>&1
+echo "hashKey=$hashKey" >> $LOGDIR/bads.log 2>&1
+echo "hashKey=$hashKey"
+export blockKey=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1) >> $LOGDIR/bads.log 2>&1
+echo "blockKey=$blockKey" >> $LOGDIR/bads.log 2>&1
+echo "blockKey=$blockKey"
 #
 # Verify configuration in /etc/ansible/roles/InstallBaculaAgent
+echo "" >> $LOGDIR/bads.log 2>&1
+echo ""
 echo "Please verify ansible playbooks in /etc/ansible/roles/InstallBaculaAgent..." >> $LOGDIR/bads.log 2>&1
 echo "Please verify ansible playbooks in /etc/ansible/roles/InstallBaculaAgent..."
 echo "" >> $LOGDIR/bads.log 2>&1
-echo "Please verify ansible variables in /etc/ansible/roles/InstallBaculaAgent/vars.yml..." >> $LOGDIR/bads.log 2>&1
-echo "Please verify ansible variables in /etc/ansible/roles/InstallBaculaAgent/vars.yml..."
+echo ""
+echo "Please verify ansible variables in /etc/ansible/roles/InstallBaculaAgent/vars.yml" >> $LOGDIR/bads.log 2>&1
+echo "Please verify ansible variables in /etc/ansible/roles/InstallBaculaAgent/vars.yml"
+cat /etc/ansible/roles/InstallBaculaAgent/vars.yml >> $LOGDIR/bads.log 2>&1
 cat /etc/ansible/roles/InstallBaculaAgent/vars.yml
 echo "" >> $LOGDIR/bads.log 2>&1
 #

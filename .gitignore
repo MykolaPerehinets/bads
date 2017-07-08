@@ -1,4 +1,5 @@
 #tests
 #bin
 #*.tar.gz
+#env-var.sh
 
