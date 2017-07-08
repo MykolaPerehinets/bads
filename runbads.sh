@@ -24,7 +24,7 @@ case "$OSTYPE" in
   *)        echo "Your operating system ('$OSTYPE') is not supported by BADS. Exiting." && exit 1 ;;
 esac
 ## Configuration
-VERSION=07072017
+VERSION=08072017
 LOGDIR=/var/log/bads
 ANSIBLEDIR=/etc/ansible/roles/InstallBaculaAgent
 DIR=/opt/bads
@@ -37,6 +37,11 @@ elif [[ ! -d $LOGDIR ]]; then
     echo "ERROR: $LOGDIR already exists but is not a directory... Please fix..." 2>&1
 fi
 ## Starting
+cd $DIR
+echo "START:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
+echo "START: Starting Bacula Agent Deploy Server (ver.$VERSION)... BADS start at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "" >> $LOGDIR/bads.log 2>&1
+echo "START: Deploy $ENVVAR..." >> $LOGDIR/bads.log
 $DIR/$ENVVAR
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
 #sudo su root
@@ -45,11 +50,13 @@ ssh-agent bash
 ssh-add /root/.ssh/id_rsa
 sleep 3
 cd $DIR
-echo "-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
-echo "Starting Bacula Agent Deploy Server (ver.$VERSION)... Starting at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "START:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
+echo "START: Starting Bacula Agent Deploy Server (ver.$VERSION)... BADS start at $DATE..." >> $LOGDIR/bads.log 2>&1
 $DIR/bads >> $LOGDIR/bads.log 2>&1 &
 sleep 3
+echo "START: Status of bads.service:" >> $LOGDIR/bads.log
 netstat -ntulp | grep bads >> $LOGDIR/bads.log 2>&1
-echo "Ok... Bacula Agent Deploy Server (ver.$VERSION) has been started successfully..."
+netstat -ntulp | grep bads
+echo "START: Ok... Bacula Agent Deploy Server (ver.$VERSION) has been started successfully..."
 exit 0
 

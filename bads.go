@@ -28,8 +28,8 @@ type user struct {
 var (
 
 	// hashKey  = []byte("33446a9dcf9ea060a0a6532b166da32f304af0de")
-	hashKey = []byte(os.Getenv("hashKey"))
 	// blockKey = []byte("33446a9dcf9ea060a0a6532b166da32f304af0de")
+	hashKey   = []byte(os.Getenv("hashKey"))
 	blockKey  = []byte(os.Getenv("blockKey"))
 	cookiekey = securecookie.New(hashKey, blockKey)
 
@@ -165,19 +165,20 @@ func logFunc(l string) {
 
 func main() {
 
+	log.Printf("Exporting Bacula Agent Deploy Server environment variables...")
 	// variable configuration - VERSION
-	// VERSION = (os.Getenv("VERSION"))
-	// log.Println("Server environment variable configuration - VERSION:", VERSION)
+	// version = (os.Getenv("VERSION"))
+	// log.Println("Environment variable configuration - VERSION:", version)
 	// variable configuration - hashKey
-	log.Println("Server environment variable configuration - hashKey:", hashKey)
+	log.Println("Environment variable configuration - hashKey:", hashKey)
 	// variable configuration - blockKey
-	log.Println("Server environment variable configuration - blockKey:", blockKey)
+	log.Println("Environment variable configuration - blockKey:", blockKey)
 	// userdb.Login = "admin"
 	userdb.Login = (os.Getenv("username"))
-	log.Printf("Server environment variable configuration - username:" + userdb.Login)
+	log.Printf("Environment variable configuration - username:" + userdb.Login)
 	// userdb.Password = "admin"
 	userdb.Password = (os.Getenv("password"))
-	log.Printf("Server environment variable configuration - password:" + userdb.Password)
+	log.Printf("Environment variable configuration - password:" + userdb.Password)
 
 	store.Options = &sessions.Options{
 		// Domain:   "localhost.localdomain",
@@ -196,7 +197,7 @@ func main() {
 	http.HandleFunc("/done", done)
 	http.HandleFunc("/error", error)
 	http.HandleFunc("/favicon.ico", faviconHandler)
-	log.Printf("Starting Bacula Agent Deploy Server (BADS) front-end web service...")
+	log.Printf("Starting Bacula Agent Deploy Server (BADS) front-end web service (bads.service)...")
 	log.Printf("BADS about to listen on 8443 port. Go to https://127.0.0.1:8443 for verifing...")
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("images"))))
 	// go run $GOROOT/src/pkg/crypto/tls/generate_cert.go --host="localhost"

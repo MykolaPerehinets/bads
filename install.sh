@@ -24,7 +24,7 @@ case "$OSTYPE" in
   *)        echo "Your operating system ('$OSTYPE') is not supported by BADS. Exiting." && exit 1 ;;
 esac
 ## Configuration
-VERSION=07072017
+VERSION=08072017
 LOGROTATEDIR=/etc/logrotate.d
 SERVICEDIR=/usr/lib/systemd/system
 LOGDIR=/var/log/bads
@@ -42,26 +42,39 @@ fi
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
 #sudo su root
 cd $DIR
+echo "INSTALL:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
+echo "INSTALL: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "" >> $LOGDIR/bads.log
+echo "Copy bads.logrotate..." >> $LOGDIR/bads.log
 /bin/cp -fuvb $DIR/bads.logrotate $LOGROTATEDIR/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
+echo "Restart logrotate..." >> $LOGDIR/bads.log
 logrotate -f /etc/logrotate.conf >> $LOGDIR/bads.log 2>&1
+echo "Copy bads.service..." >> $LOGDIR/bads.log
 /bin/cp -fuvb $DIR/bads.service $SERVICEDIR/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
+echo "Enable bads.service..." >> $LOGDIR/bads.log
 systemctl -l enable bads.service >> $LOGDIR/bads.log 2>&1
+echo "Start bads.service..." >> $LOGDIR/bads.log
 systemctl -l start bads.service >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
+echo "Status of bads.service:" >> $LOGDIR/bads.log
 systemctl -l status bads.service >> $LOGDIR/bads.log 2>&1
+echo "Create and copy env-var.sh from sample..." >> $LOGDIR/bads.log
 if [[ ! -e $ENVVAR ]]; then
     /bin/cp -fuvb $DIR/env-var.sh.sample $DIR/$ENVVAR >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 elif [[ ! -d $LOGDIR ]]; then
     /bin/cp -fuvb $DIR/env-var.sh.sample $DIR/$ENVVAR.$DATE >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 fi
 chmod u+x $DIR/$ENVVAR
-$DIR/$ENVVAR
+echo "Deploy Ansible playbooks..." >> $LOGDIR/bads.log
 /bin/cp -fuvb $DIR/ansible/* $ANSIBLEDIR/ >> $LOGDIR/bads.log 2>> $LOGDIR/bads.err
 #cd $ANSIBLEDIR
 #ssh-agent bash
 #ssh-add /root/.ssh/id_rsa
 #sleep 3
-echo "-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
-echo "INSTALLING: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
-echo "INSTALLING: Ok... Bacula Agent Deploy Server (ver.$VERSION) has been deployed successfully..."
+echo "Deploy $ENVVAR..." >> $LOGDIR/bads.log
+$DIR/$ENVVAR
+echo "INSTALL:-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
+echo "INSTALL: Instaling Bacula Agent Deploy Server (ver.$VERSION)... Instaled at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "INSTALL: Ok... Bacula Agent Deploy Server (ver.$VERSION) has been deployed successfully..."
+cd /
 exit 0
 

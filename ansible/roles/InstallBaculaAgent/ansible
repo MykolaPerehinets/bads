@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run with:
+# Run with
 # ./ansible -K --limit InstallBaculaAgent provision.yml
 # ./ansible -K --limit InstallBaculaAgentProduction provision.yml
 # ./ansible -K --limit InstallBaculaAgentStaging provision.yml
@@ -7,9 +7,14 @@
 # ./ansible --limit InstallBaculaAgentProduction provision.yml
 # ./ansible --limit InstallBaculaAgentStaging provision.yml
 #
+# Create vault
+# ./ansible-vault create basic.yml
+# ./ansible-vault edit basic.yml
+#
 #ssh-keyscan -f ./hosts_ping
 #ansible --inventory-file=/etc/ansible/roles/InstallBaculaAgent/hosts localhost.localhost.localdomain -m ping
 #
+# Basic usage
 #/usr/bin/env ansible-playbook -vvv -i hosts "$@"
 /usr/bin/env ansible-playbook --vault-password-file=vault.txt -vvv -i hosts "$@"
 #/usr/bin/env ansible-playbook --vault-password-file=vault.txt -i hosts "$@"

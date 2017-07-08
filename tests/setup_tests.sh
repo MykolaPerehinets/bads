@@ -37,7 +37,7 @@ elif [[ ! -d $LOGDIR ]]; then
     echo "ERROR: $LOGDIR already exists but is not a directory... Please fix..." 2>&1
 fi
 ## Deploying
-#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIR
 #sudo su root
 cd $DIR
 # Version of CentOS/RHEL
@@ -53,7 +53,7 @@ docker run --privileged -d -ti -e "container=docker"  -v /sys/fs/cgroup:/sys/fs/
 DOCKER_CONTAINER_ID=$(docker ps | grep centos | awk '{print $1}')
 docker logs $DOCKER_CONTAINER_ID
 docker exec -ti $DOCKER_CONTAINER_ID /bin/bash -xec "bash -xe /opt/bads/tests/test_inside_docker.sh ${OS_VERSION};
-  echo -ne \"------\nEND BADS TESTS\n\";"
+  echo -ne \"------\nEND BADS CONTAINER TESTS\n\";"
 docker ps -a
 docker stop $DOCKER_CONTAINER_ID
 docker rm -v $DOCKER_CONTAINER_ID
@@ -61,7 +61,7 @@ docker rm -v $DOCKER_CONTAINER_ID
 fi
 
 echo "-----------------------------------------------------------------------------------------------------------------" >> $LOGDIR/bads.log 2>&1
-echo "TESTING: CONTAINER for Bacula Agent Deploy Server (ver.$VERSION)... CREATED at $DATE..." >> $LOGDIR/bads.log 2>&1
-echo "TESTING: Ok... CONTAINER for Bacula Agent Deploy Server (ver.$VERSION) has been TESTED successfully..."
+echo "TEST: TEST CONTAINER for Bacula Agent Deploy Server (ver.$VERSION)... CREATED at $DATE..." >> $LOGDIR/bads.log 2>&1
+echo "TEST: Ok... CONTAINER for Bacula Agent Deploy Server (ver.$VERSION) has been TESTED successfully..."
 exit 0
 
